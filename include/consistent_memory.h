@@ -44,7 +44,7 @@ namespace ACSpGEMM {
 
 	inline std::vector<RegisteredMemory*>& getRegMemories()
 	{
-		static std::vector<RegisteredMemory*> m;
+		thread_local std::vector<RegisteredMemory*> m;
 		return m;
 	}
 

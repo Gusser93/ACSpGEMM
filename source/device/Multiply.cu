@@ -204,9 +204,9 @@ namespace ACSpGEMM {
 		cudaEventCreate(&ce_start); cudaEventCreate(&ce_stop); cudaEventCreate(&individual_start); cudaEventCreate(&individual_stop);
 
 		// GPU Memory Helper structures - general
-		static ConsistentGPUMemory chunckPointers;
-		static ConsistentGPUMemory combinedGeneralMemory;
-		static ConsistentGPUMemory chunk_counter_cptr;
+		thread_local ConsistentGPUMemory chunckPointers;
+		thread_local ConsistentGPUMemory combinedGeneralMemory;
+		thread_local ConsistentGPUMemory chunk_counter_cptr;
 		uint32_t* chunckAllocations{ nullptr };
 		uint32_t* blockStarts{ nullptr };
 		uint32_t* sharedRowTracker{ nullptr };
@@ -217,34 +217,34 @@ namespace ACSpGEMM {
 		void* prefixSumTemp{ nullptr };
 
 		// GPU Memory Helper structures - merge stage allocation
-		static ConsistentGPUMemory combineBlockOffsets; // SIZE: combineBlockOffsetsSize * sizeof(IndexType)
+		thread_local ConsistentGPUMemory combineBlockOffsets; // SIZE: combineBlockOffsetsSize * sizeof(IndexType)
 
-		static ConsistentGPUMemory chunk_indices_cptr; // SIZE:  ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
-		static ConsistentGPUMemory chunk_values_cptr; // SIZE: ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
-		static ConsistentGPUMemory chunk_multiplier_cptr; // SIZE: ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
+		thread_local ConsistentGPUMemory chunk_indices_cptr; // SIZE:  ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
+		thread_local ConsistentGPUMemory chunk_values_cptr; // SIZE: ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
+		thread_local ConsistentGPUMemory chunk_multiplier_cptr; // SIZE: ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * 8
 
-		static ConsistentGPUMemory combinedMergeStageMemory;
-		static uint32_t* shared_rows_handled{ nullptr };
-		static uint32_t* restart_completion{ nullptr };
-		static uint32_t* chunkElementConsumedAndPath{ nullptr };
+		thread_local ConsistentGPUMemory combinedMergeStageMemory;
+		thread_local uint32_t* shared_rows_handled{ nullptr };
+		thread_local uint32_t* restart_completion{ nullptr };
+		thread_local uint32_t* chunkElementConsumedAndPath{ nullptr };
 		uint32_t* num_chunks{ nullptr };
 		uint32_t* chunkElementCountDataOffset{ nullptr };
 		uint32_t* sample_offset{ nullptr };
-		static IndexType** chunk_indices{ nullptr };
-		static DataType** chunk_values{ nullptr };
-		static DataType* chunk_multiplier{ nullptr };
+		thread_local IndexType** chunk_indices{ nullptr };
+		thread_local DataType** chunk_values{ nullptr };
+		thread_local DataType* chunk_multiplier{ nullptr };
 		
 
 		// CPU Memory Helper structures
-		static RegisteredMemoryVar<size_t> chunkPointerSize(0);
-		static RegisteredMemoryVar<size_t> outputRowInfoSize(0);
-		static RegisteredMemoryVar<size_t> prefixSumTempMemSize;
-		static RegisteredMemoryVar<size_t> combineBlockOffsetsSize(0);
-		static RegisteredMemoryVar<size_t> mergeBlocksAlloc(0);
-		static RegisteredMemoryVar<size_t> lastSharedRows(0);
-		static RegisteredMemoryVar<size_t> merge_simple_rows(0);
-		static RegisteredMemoryVar<size_t> merge_max_chunks_rows(0);
-		static RegisteredMemoryVar<size_t> merge_generalized_rows(0);
+		thread_local RegisteredMemoryVar<size_t> chunkPointerSize(0);
+		thread_local RegisteredMemoryVar<size_t> outputRowInfoSize(0);
+		thread_local RegisteredMemoryVar<size_t> prefixSumTempMemSize;
+		thread_local RegisteredMemoryVar<size_t> combineBlockOffsetsSize(0);
+		thread_local RegisteredMemoryVar<size_t> mergeBlocksAlloc(0);
+		thread_local RegisteredMemoryVar<size_t> lastSharedRows(0);
+		thread_local RegisteredMemoryVar<size_t> merge_simple_rows(0);
+		thread_local RegisteredMemoryVar<size_t> merge_max_chunks_rows(0);
+		thread_local RegisteredMemoryVar<size_t> merge_generalized_rows(0);
 		uint32_t flagsAndListAllocCounters[numFlags + numCounters];
 		size_t tempChunkBufferSizes[256];
 		CU::unique_ptr tempChunkBuffers[256];

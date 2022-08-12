@@ -638,7 +638,7 @@ size_t AcSpGEMMKernels::tempMemSize(size_t CRows)
  	size_t adjtempsize = tempMemSize - outtempsize;
 	void* temporaryMem = reinterpret_cast<void*>(reinterpret_cast<uint64_t>(tempMem) + outtempsize);
 
- 	static auto blockCounter = allocHostMemory<INDEX_TYPE>(4);
+ 	thread_local auto blockCounter = allocHostMemory<INDEX_TYPE>(4);
 
  	//sum and offsets of merges
  	if (activeRows < ((1u<<9)-1))

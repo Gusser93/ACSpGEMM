@@ -10,6 +10,8 @@
 #include "cusparse/include/cuSparseMultiply.h"
 #include <cuda_runtime.h>
 #include "common.h"
+#include "Multiply.h"
+
 
 namespace cuSPARSE {
 		template<>

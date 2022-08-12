@@ -12,10 +12,10 @@ include_directories(externals)
 option(CUDA_BUILD_CC50 "Build with compute capability 5.0 support" FALSE)
 option(CUDA_BUILD_CC52 "Build with compute capability 5.2 support" FALSE)
 option(CUDA_BUILD_CC60 "Build with compute capability 6.0 support" FALSE)
-option(CUDA_BUILD_CC61 "Build with compute capability 6.1 support" TRUE)
-option(CUDA_BUILD_CC70 "Build with compute capability 7.0 support" FALSE)
+option(CUDA_BUILD_CC61 "Build with compute capability 6.1 support" FALSE)
+option(CUDA_BUILD_CC70 "Build with compute capability 7.0 support" TRUE)
 option(CUDA_BUILD_INFO "Build with kernel statistics and line numbers" TRUE)
-option(CUDA_BUILD_DEBUG "Build with kernel debug" FALSE)
+option(CUDA_BUILD_DEBUG "Build with kernel debug" TRUE)
 
 # CUDA Flags
 if (CUDA_BUILD_CC50)
@@ -107,30 +107,32 @@ add_library(acSpGEMM
 				source/CSR.cpp
 				source/dCSR.cpp
 				source/device/Multiply.cu
-				${ACSPGEMMHEADERS}
+				externals/cusparse/source/cuSparseMultiply.cu
+				#${ACSPGEMMHEADERS}
 )
+target_include_directories(acSpGEMM PUBLIC "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/externals")
 
 # Comparison implementations for cuSparse
-set(COMP_SOURCES "externals/cusparse/source/cuSparseMultiply.cu")
+#set(COMP_SOURCES "externals/cusparse/source/cuSparseMultiply.cu")
 
-add_library(comp_implementations
-				${COMP_SOURCES}
-)
+#add_library(comp_implementations
+#				${COMP_SOURCES}
+#)
 
 # Executable to run a single test
-add_executable(HostTest 
-				source/main.cpp
-)
+#add_executable(HostTest 
+#				source/main.cpp
+#)
 
 # Executable to perform a complete testrun
-add_executable(performTestCase
-				source/performTestCase.cpp
-)
+#add_executable(performTestCase
+#				source/performTestCase.cpp
+#)
 
 # Executable to test bit stability
-add_executable(checkBitStability
-				source/checkBitStability.cpp
-)
+#add_executable(checkBitStability
+#				source/checkBitStability.cpp
+#)
 
 if(WIN32)
 set_property(TARGET performTestCase PROPERTY CXX_STANDARD 17)
@@ -138,6 +140,6 @@ set_property(TARGET checkBitStability PROPERTY CXX_STANDARD 17)
 endif()
 
 # Link Libraries
-target_link_libraries(HostTest acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse )
-target_link_libraries(performTestCase acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )
-target_link_libraries(checkBitStability acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )
+#target_link_libraries(HostTest acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse )
+#target_link_libraries(performTestCase acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )
+#target_link_libraries(checkBitStability acSpGEMM comp_implementations ${CUDA_cudart_static_LIBRARY} cusparse ${GCC_COVERAGE_LINK_FLAGS} )

@@ -112,7 +112,7 @@ void AcSpGEMMKernels::h_copyChunks(void* const* __restrict chunks_pointers, cons
 {
 	int blockSize(256);
 
-	static size_t copyBlocksOnGPU = 0;
+	thread_local size_t copyBlocksOnGPU = 0;
 	if (copyBlocksOnGPU == 0)
 	{
 		CUdevice dev;
