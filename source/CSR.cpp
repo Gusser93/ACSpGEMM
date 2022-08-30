@@ -217,7 +217,7 @@ void convert(CSR<T>& res, const COO<T>& coo)
 	};
 
 	std::vector<Entry> entries;
-	std::cout << coo.nnz << std::endl;
+	//std::cout << coo.nnz << std::endl;
 	entries.reserve(coo.nnz);
 	for (size_t i = 0; i < coo.nnz; ++i)
 		entries.push_back(Entry{ coo.row_ids[i], coo.col_ids[i], coo.data[i] });

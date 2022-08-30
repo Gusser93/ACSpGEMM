@@ -41,7 +41,7 @@ if (CUDA_BUILD_INFO)
 endif ()
 
 if (CUDA_BUILD_DEBUG)
-	string(APPEND CMAKE_CUDA_FLAGS " -G")
+	string(APPEND CMAKE_CUDA_FLAGS " -G -lineinfo")
 endif ()
 
 # CXX Flags

@@ -124,9 +124,9 @@ namespace ACSpGEMM {
 		const size_t numFlags{ 128 };
 		const size_t numCounters{ 3 };
 		const size_t mergeTypeCounters{ 4 };
-		static size_t maxExpectedNNZ{ 500000000 }; //limit allocation...
-		static size_t minExpectedNNZ{ 10000000 }; //limit allocation...
-		static float lastChunckBufferRequirementRatio{ 1.0f };
+		static const size_t maxExpectedNNZ{ 500000000 }; //limit allocation...
+		static const size_t minExpectedNNZ{ 10000000 }; //limit allocation...
+		static const float lastChunckBufferRequirementRatio{ 1.0f };
 		const uint32_t nnzperblock{ threads * nnz_per_thread };
 		size_t run{ 0 }, chunk_pointer_restart_run{ 0 };
 		bool completed{ false };
@@ -191,7 +191,7 @@ namespace ACSpGEMM {
 		int blockSize = 256;
 		int gridSize(divup<int>(Arows + 1, blockSize));
 		const int number_merge_streams = 3;
-		static CUstream mergeStreams[number_merge_streams];
+		thread_local CUstream mergeStreams[number_merge_streams];
 		for (int i = 0; i < number_merge_streams; ++i)
 		{
 			if(stats.measure_all)
