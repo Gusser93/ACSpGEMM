@@ -48,9 +48,8 @@
 #include <intrin.h>
 #define LZCNT __lzcnt
 #else
-//#include <x86intrin.h>
-#include <bit>
-#define LZCNT std::countl_zero
+#include <x86intrin.h>
+#define LZCNT __builtin_clzll
 #endif
 
 // Local includes
