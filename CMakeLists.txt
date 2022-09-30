@@ -34,7 +34,7 @@ if (CUDA_BUILD_CC70)
 	string(APPEND CMAKE_CUDA_FLAGS " -gencode=arch=compute_70,code=sm_70")
 endif ()
 
-string(APPEND CMAKE_CUDA_FLAGS " -std=c++14 -Xcompiler -Wall -D_FORCE_INLINES -DVERBOSE --expt-extended-lambda -use_fast_math --expt-relaxed-constexpr")
+string(APPEND CMAKE_CUDA_FLAGS " -std=c++20 -Xcompiler -Wall -D_FORCE_INLINES -DVERBOSE --expt-extended-lambda -use_fast_math --expt-relaxed-constexpr")
 
 if (CUDA_BUILD_INFO)
 	string(APPEND CMAKE_CUDA_FLAGS " -keep --ptxas-options=-v -lineinfo")
@@ -52,7 +52,7 @@ if(MSVC)
 endif()
 else()
 set(GCC_COVERAGE_LINK_FLAGS  "-lstdc++fs")
-string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -mlzcnt") # -Wno-unknown-pragmas
+string(APPEND CMAKE_CXX_FLAGS "-std=c++20") # -Wno-unknown-pragmas
 endif()
 
 
@@ -135,8 +135,8 @@ target_include_directories(acSpGEMM PUBLIC "${PROJECT_SOURCE_DIR}/include" "${PR
 #)
 
 if(WIN32)
-set_property(TARGET performTestCase PROPERTY CXX_STANDARD 17)
-set_property(TARGET checkBitStability PROPERTY CXX_STANDARD 17)
+set_property(TARGET performTestCase PROPERTY CXX_STANDARD 20)
+set_property(TARGET checkBitStability PROPERTY CXX_STANDARD 20)
 endif()
 
 # Link Libraries

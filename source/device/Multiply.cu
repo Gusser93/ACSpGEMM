@@ -48,8 +48,9 @@
 #include <intrin.h>
 #define LZCNT __lzcnt
 #else
-#include <x86intrin.h>
-#define LZCNT __builtin_clzll
+//#include <x86intrin.h>
+#include <bit>
+#define LZCNT std::countl_zero
 #endif
 
 // Local includes
@@ -103,7 +104,7 @@ namespace ACSpGEMM {
 	void MultiplyImplementation(const dCSR<DataType>& matA, const dCSR<DataType>& matB, dCSR<DataType>& matOut, const GPUMatrixMatrixMultiplyTraits& traits, ExecutionStats& stats)
 	{
 		using ConsistentGPUMemory = ConsistentMemory<MemorySpace::device>;
-		
+
 		// the magic numbers to make it run smoother
 		const float OverallocationFactor = 1.25f;
 		const int ChunkPointerOverestimationFactor = 4;
@@ -233,7 +234,7 @@ namespace ACSpGEMM {
 		thread_local IndexType** chunk_indices{ nullptr };
 		thread_local DataType** chunk_values{ nullptr };
 		thread_local DataType* chunk_multiplier{ nullptr };
-		
+
 
 		// CPU Memory Helper structures
 		thread_local RegisteredMemoryVar<size_t> chunkPointerSize(0);
@@ -254,14 +255,14 @@ namespace ACSpGEMM {
 		//
 		// Allocate temporary memory for chunks
 		tempChunkBuffers[0] = CU::allocMemory(tempChunkBufferSizes[0]);
-		
+
 		cudaDeviceSynchronize();
 		// ##############################
 		startTimer(ce_start, stream);
 		// ##############################
 		if(stats.measure_all)
 			startTimer(individual_start, stream);
-		
+
 
 		// Allocate memory for block offsets
 		uint32_t requiredBlocks = divup<uint32_t>(matA.nnz, nnzperblock);
@@ -301,7 +302,7 @@ namespace ACSpGEMM {
 		// TODO: Move back in, currently sometimes produces crashes for whatever reason
 		chunk_counter_cptr.assure((requiredBlocks + 2) * sizeof(uint32_t));
 		chunk_counter = chunk_counter_cptr.get<uint32_t>();
-		
+
 		// Allocate memory for chunk pointers
 		size_t targetChunkPointerSize = ChunkPointerOverestimationFactor*mergepointer_estimate;
 		if (chunkPointerSize < targetChunkPointerSize)
@@ -528,7 +529,7 @@ namespace ACSpGEMM {
 					// 	throw MergeGeneralizedCaseException();
 					// }
 					if(stats.measure_all)
-						stats.duration_merge_generalized += recordTimer(individual_start, individual_stop, mergeStreams[2]); 
+						stats.duration_merge_generalized += recordTimer(individual_start, individual_stop, mergeStreams[2]);
 				}
 			}
 
@@ -642,7 +643,7 @@ namespace ACSpGEMM {
 					chunk_values = chunk_values_cptr.get<DataType*>();
 					chunk_multiplier_cptr.assure(((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks) * sizeof(DataType));
 					chunk_multiplier = chunk_multiplier_cptr.get<DataType>();
-					
+
 
 					// TODO: Why does this NOT work??????????????????????????
 					/*chunk_indices = reinterpret_cast<IndexType**>(chunk_multiplier + ((mergeBlocks.shared_rows_max_chunks) * merge_max_chunks));*/
@@ -675,7 +676,7 @@ namespace ACSpGEMM {
 		//----------------------------------------------------------
 		spgemm.computeRowOffsets<IndexType>(Crows, prefixSumTemp, prefixSumTempMemSize, newmat_offsets, stream);
 		//----------------------------------------------------------
-		
+
 		// Allocate output matrix
 		IndexType matrix_elements;
 		CUdeviceptr offs = newmat_offsets;
@@ -690,7 +691,7 @@ namespace ACSpGEMM {
 		matOut.row_offsets = std::move(newmat_offsets.getRelease<IndexType>());
 
 		//----------------------------------------------------------
-		spgemm.h_copyChunks<DataType, IndexType, OffsetType>(chunckPointers.get<void*>(), currentCounters, 
+		spgemm.h_copyChunks<DataType, IndexType, OffsetType>(chunckPointers.get<void*>(), currentCounters,
 			matOut.data, matOut.col_ids, matOut.row_offsets);
 		//----------------------------------------------------------
 		if(stats.measure_all)
@@ -709,7 +710,7 @@ namespace ACSpGEMM {
 		// ##############################
 		stats.duration = recordTimer(ce_start, ce_stop, stream);
 		// ##############################
-		
+
 		// Stream cleanup
 		if (!(stats.measure_all))
 		{
@@ -809,7 +810,7 @@ namespace ACSpGEMM {
 		//Threads, BlocksPerMP, NNZPerTread, InputPerThread, RetainElements, MaxChungsTo Merge, MaxChunGenrel, MergePathoption, Debug
 		bool called = EnumOption<256, 256, 128, EnumOption<3, 4, 1, EnumOption<2, 2, 1, EnumOption<4, 4, 1, EnumOption<4, 4, 1, EnumOption<16, 16, 8, EnumOption<256, 512, 256, EnumOption<8, 8, 8, EnumOption<0, 1, 1>>>>>>>>>
 			::call(Selection<MultiplyCall<DataType>>(call), scheduling_traits.Threads, scheduling_traits.BlocksPerMp, scheduling_traits.NNZPerThread, scheduling_traits.InputElementsPerThreads, scheduling_traits.RetainElementsPerThreads, scheduling_traits.MaxChunksToMerge, scheduling_traits.MaxChunksGeneralizedMerge, scheduling_traits.MergePathOptions, (int)Debug_Mode);
-		
+
 		if(!called)
 		{
 			std::cout << "Configuration not instantiated!\n";
