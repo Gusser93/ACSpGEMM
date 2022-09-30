@@ -52,48 +52,48 @@ if(MSVC)
 endif()
 else()
 set(GCC_COVERAGE_LINK_FLAGS  "-lstdc++fs")
-string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -mlzcnt -Wno-unknown-pragmas")
+string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -mlzcnt") # -Wno-unknown-pragmas
 endif()
 
 
 set(ACSPGEMMHEADERS
-	include/common.cuh 
-	include/common.h 
-	include/Compare.h 
-	include/consistent_memory.h 
-	include/COO.h 
-	include/CSR.h 
-	include/CustomExceptions.h 
-	include/dCSR.h 
-	include/default_scheduling_traits.h 
-	include/dVector.h 
-	include/execution_stats.h 
-	include/memory_space.h 
-	include/MergeCaseOffsets.h 
-	include/meta_utils.h 
-	include/multi_arch_build.h 
-	include/Multiply.h 
-	include/Transpose.h 
+	include/common.cuh
+	include/common.h
+	include/Compare.h
+	include/consistent_memory.h
+	include/COO.h
+	include/CSR.h
+	include/CustomExceptions.h
+	include/dCSR.h
+	include/default_scheduling_traits.h
+	include/dVector.h
+	include/execution_stats.h
+	include/memory_space.h
+	include/MergeCaseOffsets.h
+	include/meta_utils.h
+	include/multi_arch_build.h
+	include/Multiply.h
+	include/Transpose.h
 	include/Vector.h
-	include/device/acSpGEMM_ChunksToCSR.cuh 
-	include/device/acSpGEMM_DetermineBlockStarts.cuh 
-	include/device/acSpGEMM_MergeGeneralized.cuh 
-	include/device/acSpGEMM_MergeMaxChunks.cuh 
-	include/device/acSpGEMM_MergeSimple.cuh 
-	include/device/acSpGEMM_SpGEMM.cuh 
-	include/device/ARowStorage.cuh 
-	include/device/Chunk.cuh 
-	include/device/consistent_gpu_memory.h 
-	include/device/HelperFunctions.cuh 
+	include/device/acSpGEMM_ChunksToCSR.cuh
+	include/device/acSpGEMM_DetermineBlockStarts.cuh
+	include/device/acSpGEMM_MergeGeneralized.cuh
+	include/device/acSpGEMM_MergeMaxChunks.cuh
+	include/device/acSpGEMM_MergeSimple.cuh
+	include/device/acSpGEMM_SpGEMM.cuh
+	include/device/ARowStorage.cuh
+	include/device/Chunk.cuh
+	include/device/consistent_gpu_memory.h
+	include/device/HelperFunctions.cuh
 	include/device/MultiplyKernels.h
-	include/device/SortAndCombine.cuh 
-	include/device/WorkDistribution.cuh 
+	include/device/SortAndCombine.cuh
+	include/device/WorkDistribution.cuh
 	include/devicetools/consistent_memory.h
-	include/devicetools/error.h 
+	include/devicetools/error.h
 	include/devicetools/event.h
 	include/devicetools/memory.h
 	include/devicetools/memory_space.h
-	include/devicetools/stream.h 
+	include/devicetools/stream.h
 	include/devicetools/unique_handle.h
 )
 
@@ -120,7 +120,7 @@ target_include_directories(acSpGEMM PUBLIC "${PROJECT_SOURCE_DIR}/include" "${PR
 #)
 
 # Executable to run a single test
-#add_executable(HostTest 
+#add_executable(HostTest
 #				source/main.cpp
 #)
 
